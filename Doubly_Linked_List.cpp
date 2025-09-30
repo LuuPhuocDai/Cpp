@@ -45,10 +45,6 @@ class List{
 	void AscendingSort();
 	void DescendingSort();
 
-	// max min
-	void maximum();
-	void minimum();
-
 	// kiem tra rong.
 	bool empty();
 
