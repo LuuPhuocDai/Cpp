@@ -150,10 +150,10 @@ bool List::search(int x){
 void List::insertFirst(int x){
 	node* temp = makeNode(x);
 	if(head == nullptr){
-		head = temp;
+		head = tail = temp;
 	}else{
 		temp->next = head;
-		temp->prev = nullptr;
+		head->prev = temp;
 		head = temp;
 	}
 }
@@ -161,16 +161,12 @@ void List::insertFirst(int x){
 // chen vao cuoi danh sach.
 void List::insertLast(int x){
 	node* temp = makeNode(x);
-	tail = head;
 	if(head == nullptr){
-		head = temp;
+		head = tail = temp;
 	}else{
-		while(tail->next != nullptr){
-			tail = tail->next;
-		}
 		tail->next = temp;
 		temp->prev = tail;
-		tail = tail->next;
+		tail = temp;
 	}
 }
 
@@ -187,9 +183,9 @@ void List::insertMiddle(int x, int pos){
 		p = p->next;
 	}
 	temp->next = p->next;
-	p->prev = temp->prev;
-	temp->prev = p;
+	p->next->prev = temp;
 	p->next = temp;
+	temp->prev = p;
 }
 
 // chen phan tu vao danh sach o vi tri bat ki.
@@ -198,7 +194,7 @@ void List::insert(int x, int pos){
 	if(pos == 1){
 		insertFirst(x); return;
 	}
-	else if(pos == n){
+	else if(pos == n + 1){
 		insertLast(x); return;
 	}
 	insertMiddle(x, pos);
@@ -207,21 +203,23 @@ void List::insert(int x, int pos){
 // xoa phan tu dau ra khoi danh sach.
 void List::deleteFirst(){
 	if(head == nullptr) return;
-	head = head->next;
-	head->prev = NULL;
+	if(head == tail) head = tail = nullptr; // trg hop con 1 node.
+	else{
+		head = head->next;
+	    head->prev = NULL;
+	}
 }
 
 // xoa phan tu o cuoi danh sach.
 void List::deleteLast(){
 	if(tail == NULL) return;
 	node* p = head;
-	while(p->next != tail && nullptr){
-		p = p->next;
+	if(head == tail) head = tail = nullptr;
+	else{
+		tail = tail->prev;
+		tail->next = nullptr;
 	}
-		p = tail->prev;
-	    p->next = NULL;
-	    tail = p;
-	}
+}
 
 
 // xoa phan tu o giua danh sach.
@@ -241,28 +239,19 @@ void List::deleteMiddle(int pos){
 	}
 	else{
 		temp->next = p->next;
-		p->prev = temp;
-		p->prev = temp->prev;
+		p->next->prev = temp;
 	}
 }
 
 // xoa phan tu trong danh sach.
 void List::Delete(int pos){
 	int n = length();
-	if(n >= 2){
-		if(pos == 1){
-		   deleteFirst(); return;
-	    }
-	    else if(pos == n){
-		   deleteLast(); return;
-   	    }
-	    else if(n == 1){
-		   deleteList(); return;
-	    }
-	}else if(n == 1){
-		deleteList(); return;
+	if(pos == 1){
+		deleteFirst(); return;
 	}
-	
+	else if(pos == n){
+		deleteLast(); return;
+	}
 	deleteMiddle(pos);
 }
 
